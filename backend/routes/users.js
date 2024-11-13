@@ -1,6 +1,75 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../db/users");
+const bcrypt = require("bcrypt"); // สำหรับการเปรียบเทียบรหัสผ่านที่เข้ารหัส
+
+// Login
+router.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // เพิ่ม debug log
+        console.log("Login attempt:", { username });
+
+        // ค้นหาผู้ใช้ตาม username
+        const user = await User.findOne({ username });
+        if (!user) {
+            console.log("User not found");
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        // debug log สำหรับ password comparison
+        console.log("Found user:", {
+            username: user.username,
+            hashedPassword: user.password
+        });
+
+        // ตรวจสอบรหัสผ่าน
+        const isMatch = await bcrypt.compare(password, user.password);
+        console.log("Password match:", isMatch);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        // ล็อกอินสำเร็จ
+        res.status(200).json({
+            message: "Login successful",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        });
+    } catch (err) {
+        console.error("Login error:", err);
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Signup
+router.post("/signup", async (req, res) => {
+    try {
+        // เช็ค username ซ้ำ
+        const existingUser = await User.findOne({ username: req.body.username });
+        if (existingUser) {
+            return res.status(400).json({ message: "Username already exists" });
+        }
+
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        const user = new User({
+            email: req.body.email,
+            password: hashedPassword,
+            username: req.body.username,
+        });
+
+        const newUser = await user.save();
+        res.status(201).json({ message: "User registered successfully", user: newUser });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
 
 // Get all users 
 router.get("/", async (req, res) => {
@@ -9,22 +78,6 @@ router.get("/", async (req, res) => {
         res.json(users);
     } catch (err) {
         res.status(500).json({ message: err.message });
-    }
-});
-
-// Create a new user 
-router.post("/", async (req, res) => {
-    const user = new User({
-        email: req.body.email,
-        password: req.body.password,
-        username: req.body.username,
-    });
-
-    try {
-        const newUser = await user.save();
-        res.status(201).json(newUser);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
     }
 });
 
