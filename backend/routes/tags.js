@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
 });
 
 // Get all tags
-router.get("/", async (req, res) => {
+router.get("/tags", async (req, res) => {
     try {
         const tags = await Tag.find(); // Fetch all tags from the database
         res.json(tags); // Send the tags as a JSON response

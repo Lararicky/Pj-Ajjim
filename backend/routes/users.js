@@ -56,11 +56,10 @@ router.post("/signup", async (req, res) => {
             return res.status(400).json({ message: "Username already exists" });
         }
 
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
+        // สร้าง User โดยไม่ต้องแฮชรหัสผ่านในที่นี้ เพราะจะถูกจัดการโดย Mongoose middleware
         const user = new User({
             email: req.body.email,
-            password: hashedPassword,
+            password: req.body.password, // ส่งรหัสผ่านแบบ plaintext ให้ Mongoose middleware จัดการ
             username: req.body.username,
         });
 

@@ -18,13 +18,7 @@ const commentRoutes = require("./routes/comments");
 
 // CORS configuration
 app.use(cors({
-    origin: (origin, callback) => {
-        if (origin === 'http://localhost:4200') {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: 'http://localhost:4200',  // แก้ไขเป็นค่าคงที่
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
