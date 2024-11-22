@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const storySchema = new mongoose.Schema({
     title: {
@@ -7,7 +8,9 @@ const storySchema = new mongoose.Schema({
     },
     genre: [{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: "Tag" }
+        ref: "Tag",
+        required: true
+     }
     ],
     status: {
         type: String,

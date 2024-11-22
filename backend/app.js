@@ -15,11 +15,12 @@ const storyRoutes = require("./routes/stories");
 const likeRoutes = require("./routes/likes");
 const contributionRoutes = require("./routes/contributions");
 const commentRoutes = require("./routes/comments");
+const userProfileRoutes = require("./routes/user_profile");
 
 // CORS configuration
 app.use(cors({
     origin: 'http://localhost:4200',  // แก้ไขเป็นค่าคงที่
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
@@ -66,7 +67,8 @@ app.use("/story", storyRoutes);
 app.use("/story-tag", storyTagRoutes);
 app.use("/like", likeRoutes);
 app.use("/contribution", contributionRoutes);
-app.use("/comment", commentRoutes); 
+app.use("/comment", commentRoutes);
+//app.use("/user-profile", userProfileRoutes); 
 
 // MongoDB connection
 mongoose.connect("mongodb://localhost:27017/tribetalesdb", {

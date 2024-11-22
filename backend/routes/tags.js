@@ -3,7 +3,7 @@ const router = express.Router();
 const Tag = require("./../db/tags");
 
 // Create a new tag
-router.post("/", async (req, res) => {
+router.post("/newtag", async (req, res) => {
     let model = req.body;
 
     let tag = new Tag({

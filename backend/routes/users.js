@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const User = require("../db/users");
 const bcrypt = require("bcrypt"); // สำหรับการเปรียบเทียบรหัสผ่านที่เข้ารหัส
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'Shush12345'; // ใช้คีย์ลับที่ปลอดภัยสำหรับ production
 
 // Login
 router.post("/login", async (req, res) => {
@@ -32,9 +34,11 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // ล็อกอินสำเร็จ
+        // ล็อกอินสำเร็จ - สร้าง JWT token
+        const token = jwt.sign({ userId: user._id }, SECRET_KEY, { expiresIn: '1h' });
         res.status(200).json({
             message: "Login successful",
+            token: token,
             user: {
                 id: user._id,
                 username: user.username,

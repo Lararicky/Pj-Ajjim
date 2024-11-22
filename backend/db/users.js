@@ -16,6 +16,30 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    user_bio: {
+        type: String,
+        default: ''
+    },
+    dob: {
+        type: Date,
+        required: false
+    },
+    gender: {
+        type: String,
+        required: false
+    },
+    tel: {
+        type: String,
+        required: false
+    },
+    address: {
+        type: String,
+        required: false
+    },
+    coverImage: {
+        type: String, // เก็บเป็น URL หรือ Base64 string
+        required: false
+    },
     created_at: {
         type: Date,
         default: Date.now
